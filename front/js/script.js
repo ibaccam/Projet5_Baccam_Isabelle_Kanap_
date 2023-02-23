@@ -22,13 +22,13 @@ function getProducts() {
 //Fonction pour afficher les produits de l'API sur la page d'accueil//
 function displayProduct(product) { // fonction pour afficher les produits
     document.getElementById('items').innerHTML +=  // getElementById() permet de récupérer les informations d'une balise identifiée par son id. // .innerHTML crée les nouveaux élements dans le DOM
-        `<a href="./product.html?_id=${product._id}">
+        `<a href="./product.html?id=${product._id}">
         <article>
             <img src="${product.imageUrl}" alt="${product.altTxt}">
             <h3 class="productName">${product.name}</h3>
             <p class="productDescription">${product.description}</p>
         </article>
-    </a>`;
+    </a>`; // lien entre un produit de la page d'accueil et la page produit + récupération de l'ID à afficher
 }
 
 //Fonction pour lancer la récupération et l'affichage de chaque produit de la liste//
