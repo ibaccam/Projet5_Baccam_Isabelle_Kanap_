@@ -6,7 +6,7 @@
 
 //Fonction pour récupérer l'ensemble des produits de l'API//
 function getProducts() { 
-    return fetch("http://localhost:3000/api/products") //chemin de la ressource qu’on souhaite récupérer//
+    return fetch("http://localhost:3000/api/products") // chemin de la ressource qu’on souhaite récupérer//
         .then(function(response){
             return response.json() // retourne la réponse en format json (retourne une promesse contenant la réponse)
         })
@@ -21,7 +21,7 @@ function getProducts() {
 
 //Fonction pour afficher les produits de l'API sur la page d'accueil//
 function displayProduct(product) { // fonction pour afficher les produits
-    document.getElementById('items').innerHTML +=  // getElementById() permet de récupérer les informations d'une balise identifiée par son id. // .innerHTML crée les nouveaux élements dans le DOM
+    document.getElementById('items').innerHTML +=  // getElementById() permet de récupérer les informations d'une balise identifiée par son id. // .innerHTML crée les nouveaux élements dans le DOM => concaténations successives avec "+="
         `<a href="./product.html?id=${product._id}">
         <article>
             <img src="${product.imageUrl}" alt="${product.altTxt}">

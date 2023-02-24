@@ -1,24 +1,53 @@
 
-//Fonction pour récupérer l'ID du produit//
+//Fonction pour récupérer l'ID du produit dans l'URL/
 function getProductId() {
-    return new URL(location.href).searchParams.get('id')
+    return new URL(location.href).searchParams.get('id')  // utilisation de l'objet "URL" et de "searchParams"
+}
+// Déclaration d'une constante pour identifier l'ID du produit //on peut donner n'importe quel nom
+//const productId = getProductId() 
+
+//Fonction pour récupérer le produit par rapport à son ID
+function getProductIdData(productId) { // argument 
+    return fetch(`http://localhost:3000/api/products/${productId}`)//chemin de la ressource qu’on souhaite récupérer avec l'id du produit//     
+        .then(function(response){
+            return response.json() // retourne la réponse en format json (retourne une promesse contenant la réponse)
+        })
+        .then(function(data) {
+            return data // récupération de la valeur du résultat json précédent
+    //return console.table(data)// récupération de la valeur du résultat json précédent
+        })
+        .catch(function (error) {   // retourner valeur si erreur de l'opération fetch
+            error = `Erreur echec du chargement, merci de relancer votre demande.`;
+            alert(error);
+            })
 }
 
-const productId = getProductId()
+//Fonction pour afficher les caractéristiques du produit sur la page :
+// img src - Nom - Prix - Description - Couleur
+function displayProductIdType(productIdType) { // fonction pour afficher les produits //on peut donner n'importe quel nom mais il faut qu'il soit rappelé avec le "".champs"
+    document.querySelector('.item__img').innerHTML =
+        `<img src="${productIdType.imageUrl}" alt="${productIdType.altTxt}">`
+    document.getElementById('title').innerHTML = `<h1 id="title">${productIdType.name}</h1>`
+    }
 
-//Fonction pour récupérer le produit par rapport à son iD
-fetch(`http://localhost:3000/api/products/${productId}`)//chemin de la ressource qu’on souhaite récupérer//
-       
-.then(function(response){
-    return response.json() // retourne la réponse en format json (retourne une promesse contenant la réponse)
-})
-.then(function(data) {
-    return data // récupération de la valeur du résultat json précédent
-    //return console.table(data)// récupération de la valeur du résultat json précédent
-})
-.catch(function (error) {   // retourner valeur si erreur de l'opération fetch
-    error = `Erreur echec du chargement, merci de relancer votre demande.`;
-    alert(error);
-})
 
+//Fonction pour lancer la récupération de l'ID, ses caractéristiques et l'affichage du produit identifié
+async function main() { //Une fonction asynchrone peut appeler une fonction qui retourne une promesse ou une fonction asynchrone en spécifiant le mot-clé await.
+    // On récupère d'abord l'id du produit dans l'url
+    const productId = getProductId() //valeur de l'ID // // Déclaration d'une constante pour identifier l'ID du produit
+    //console.log(productId)
+    
+    // On récupère les caractéristiques du produit grâce à l'id
+    const productIdType = await getProductIdData(productId) // poductIdType = valeur des caractéristqiues et attend de récupérer l'ID pour identifier les caractéristiques
+    //console.log(product)
+    
+    // Puis on l'affiche
+    displayProductIdType(productIdType)
+    // et on permet l'ajout de produit au panier
+     
+};
+main();
+
+    //https://www.pierre-giraud.com/javascript-apprendre-coder-cours/fonction-anonyme-auto-invoquee-recursive/
+    //Fonction anonyme auto-invoquée : (function(){alert('Alerte exécutée par une fonction anonyme')})();
 
