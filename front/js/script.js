@@ -20,7 +20,7 @@ function getProducts() {
 }
 
 //Fonction pour afficher les produits de l'API sur la page d'accueil//
-function displayProduct(product) { // fonction pour afficher les produits
+function displayProduct(product) { // fonction pour afficher les produits/création de l'argument product
     document.getElementById('items').innerHTML +=  // getElementById() permet de récupérer les informations d'une balise identifiée par son id. // .innerHTML crée les nouveaux élements dans le DOM => concaténations successives avec "+="
         `<a href="./product.html?id=${product._id}">
         <article>

@@ -42,6 +42,7 @@ function getProductIdData(productId) { // argument
 
 //Fonction pour afficher les caractéristiques du produit sur la page :
 // img src - Nom - Prix - Description - Couleur
+
 function displayProductIdType(productIdType) { // fonction pour afficher les produits //on peut donner n'importe quel nom mais il faut qu'il soit rappelé avec le "".champs"
     document.querySelector('.item__img').innerHTML =
         `<img src="${productIdType.imageUrl}" alt="${productIdType.altTxt}">`
@@ -68,8 +69,8 @@ async function main() { //Une fonction asynchrone peut appeler une fonction qui 
     
     // Puis on l'affiche
     displayProductIdType(productIdType)
-    // et on permet l'ajout de produit au panier
-     
+
+         
 };
 main();
 
@@ -79,4 +80,33 @@ main();
 /*---------------------------------------------------------------------
         Ajouter des produits dans le panier
 ----------------------------------------------------------------------*/
+//Récupération des données sélectionnées par l'utilisateur et envoi du panier
 
+
+//Sélection du bouton Ajouter au panier
+const btn_ajouterPanier = document.getElementById("addToCart")
+
+//Ecouter le bouton au click
+btn_ajouterPanier.addEventListener("click", (event)=>{
+
+    //valeur de l'ID du produit
+    const productId = getProductId() 
+    //valeur de la quantité choisie par l'utilisateur
+    const quantity = document.getElementById('quantity').value
+    //valeur de la couleur choisie par l'utilisateur
+    const color = document.getElementById('colors').value
+    const productIdType = getProductIdData(productId)
+
+        //console.log(btn_ajouterPanier) 
+
+    // on récupère les valeurs du produit choisit dans un objet
+    let choixProduct = {
+        id: productId,
+        //name: productIdType.name,
+        //img: productIdType.imageUrl,
+        color: color,
+        quantity: quantity,
+    }
+    console.log(choixProduct)
+
+})
