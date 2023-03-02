@@ -1,10 +1,22 @@
 
+/*-----------------------------------------------------------------------------
+        Faire le lien entre un produit de la page d'accueil et la page Produit
+--------------------------------------------------------------------------------*/
+
 //Fonction pour récupérer l'ID du produit dans l'URL/
 function getProductId() {
     return new URL(location.href).searchParams.get('id')  // utilisation de l'objet "URL" et de "searchParams"
 }
 // Déclaration d'une constante pour identifier l'ID du produit //on peut donner n'importe quel nom
 //const productId = getProductId() 
+
+
+
+
+
+/*-----------------------------------------------------------------------------
+        Récupérer l'ID du produit affiché
+--------------------------------------------------------------------------------*/
 
 //Fonction pour récupérer le produit par rapport à son ID
 function getProductIdData(productId) { // argument 
@@ -22,13 +34,26 @@ function getProductIdData(productId) { // argument
             })
 }
 
+
+
+/*-----------------------------------------------------------------------------
+        Insérer et afficher un produit et ses détails dans la page Produit
+--------------------------------------------------------------------------------*/
+
 //Fonction pour afficher les caractéristiques du produit sur la page :
 // img src - Nom - Prix - Description - Couleur
 function displayProductIdType(productIdType) { // fonction pour afficher les produits //on peut donner n'importe quel nom mais il faut qu'il soit rappelé avec le "".champs"
     document.querySelector('.item__img').innerHTML =
         `<img src="${productIdType.imageUrl}" alt="${productIdType.altTxt}">`
-    document.getElementById('title').innerHTML = `<h1 id="title">${productIdType.name}</h1>`
+    document.getElementById('title').innerHTML = productIdType.name
+    document.getElementById('price').innerHTML = productIdType.price
+    document.getElementById('description').innerHTML = productIdType.description
+   
+    //boucle for...of pour les couleurs
+    for (const color of productIdType.colors) {
+    document.getElementById('colors').innerHTML += `<option value="${color}">${color}</option>`
     }
+}
 
 
 //Fonction pour lancer la récupération de l'ID, ses caractéristiques et l'affichage du produit identifié
@@ -48,6 +73,10 @@ async function main() { //Une fonction asynchrone peut appeler une fonction qui 
 };
 main();
 
-    //https://www.pierre-giraud.com/javascript-apprendre-coder-cours/fonction-anonyme-auto-invoquee-recursive/
-    //Fonction anonyme auto-invoquée : (function(){alert('Alerte exécutée par une fonction anonyme')})();
+
+
+
+/*---------------------------------------------------------------------
+        Ajouter des produits dans le panier
+----------------------------------------------------------------------*/
 
