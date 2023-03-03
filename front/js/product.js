@@ -43,7 +43,7 @@ function getProductIdData(productId) { // argument
 //Fonction pour afficher les caractéristiques du produit sur la page :
 // img src - Nom - Prix - Description - Couleur
 
-function displayProductIdType(productIdType) { // fonction pour afficher les produits //on peut donner n'importe quel nom mais il faut qu'il soit rappelé avec le "".champs"
+function displayProductIdType(productIdType) { // fonction pour afficher les produits //on peut donner n'importe quel nom mais il faut qu'il soit rappelé avec "l'argument.champs"
     document.querySelector('.item__img').innerHTML =
         `<img src="${productIdType.imageUrl}" alt="${productIdType.altTxt}">`
     document.getElementById('title').innerHTML = productIdType.name
@@ -51,8 +51,8 @@ function displayProductIdType(productIdType) { // fonction pour afficher les pro
     document.getElementById('description').innerHTML = productIdType.description
    
     //boucle for...of pour les couleurs
-    for (const color of productIdType.colors) {
-    document.getElementById('colors').innerHTML += `<option value="${color}">${color}</option>`
+    for (const color of productIdType.colors) { //Pour chaque couleur existante dans le produit
+    document.getElementById('colors').innerHTML += `<option value="${color}">${color}</option>` //crée selon les données du produit
     }
 }
 
@@ -80,8 +80,8 @@ main();
 /*---------------------------------------------------------------------
         Ajouter des produits dans le panier
 ----------------------------------------------------------------------*/
-//Récupération des données sélectionnées par l'utilisateur et envoi du panier
 
+//Récupération des données sélectionnées par l'utilisateur et envoi du panier
 
 //Sélection du bouton Ajouter au panier
 const btn_ajouterPanier = document.getElementById("addToCart")
@@ -95,18 +95,47 @@ btn_ajouterPanier.addEventListener("click", (event)=>{
     const quantity = document.getElementById('quantity').value
     //valeur de la couleur choisie par l'utilisateur
     const color = document.getElementById('colors').value
-    const productIdType = getProductIdData(productId)
+        //const productIdType = getProductIdData(productId)
 
         //console.log(btn_ajouterPanier) 
 
-    // on récupère les valeurs du produit choisit dans un objet
+    // on récupère les valeurs du produit choisi dans un objet
     let choixProduct = {
         id: productId,
-        //name: productIdType.name,
-        //img: productIdType.imageUrl,
+            //name: productIdType.name,
+            //img: productIdType.imageUrl,
         color: color,
         quantity: quantity,
     }
     console.log(choixProduct)
 
+
+
+
+/*---------------------------------------------------------------------
+        Stockage des valeurs dans le local storage
+----------------------------------------------------------------------*/
+//Déclaration d'une variable dans laquelle se trouve les valeurs du local storage
+let productLocalStorage = JSON.parse (localStorage.getItem("panier"));
+ //JSON.parse convertit les données JSON du localStorage en objet Javascript 
+ //Lit ds le local storage, cette méthode renvoie la valeur de la clé correspondante "produit"
+
+//2 cas à prendre en compte : si une clé existe , donc pas à créer mais si vide, clé à créer
+
+//s'il y a déjà des produits dans le localStorage
+if(productLocalStorage) {
+    productLocalStorage.push(choixProduct); //je récupère le choix de l'utilisateur
+    localStorage.setItem("panier", JSON.stringify(productLocalStorage));
+    //set.Item : cette méthode ajoute cette clé et cette valeur dans le stockage. Si la clé existe déjà, elle met à jour la valeur
+    //puis je dois convertir les données en JSON avec .strignify
+}
+
+// s'il n'existe aucun produit dans le local storage 
+else{
+    productLocalStorage=[];  //alors je crée un tableau 
+    productLocalStorage.push(choixProduct); //où je récupère le choix de l'utilisateur
+    localStorage.setItem("panier", JSON.stringify(productLocalStorage));//mais je dois créer la clé et envoyer la donnée en objet Javascript
+    //set.Item : cette méthode ajoute cette clé et cette valeur dans le stockage. Si la clé existe déjà, elle met à jour la valeur
+    //puis je dois convertir les données en JSON avec .strignify
+}
 })
