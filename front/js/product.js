@@ -109,7 +109,7 @@ btn_ajouterPanier.addEventListener("click", (event)=>{
             //name: productIdType.name,
             //img: productIdType.imageUrl,
         color: color,
-        quantity: quantity,
+        quantity: parseInt(quantity)
     }
     console.log(choixProduct)
 
@@ -137,6 +137,11 @@ if(productLocalStorage) {
     let article= productLocalStorage.find((article) => article.id == choixProduct.id && article.color == choixProduct.color); 
    
     //Si c'est le cas=>  on ajoute la nouvelle quantité à l'ancienne
+    if (article) {
+        const newQuantity  = article.quantity + choixProduct.quantity; // attention pour faire la somme il faut définir valeur des quantités
+        console.log(newQuantity)
+    }
+   
         // Si la somme dépasse 100, on ne peut pas ajouter au panier et il faut alerter l'utilisateur
         // Sinon, on réassigne la quantité
     
