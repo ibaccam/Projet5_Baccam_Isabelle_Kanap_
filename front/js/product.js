@@ -152,9 +152,7 @@ btn_ajouterPanier.addEventListener("click", (event)=>{
                 article.quantity = newQuantity;
                 localStorage.setItem("panier", JSON.stringify(productLocalStorage));
                 //set.Item : cette méthode ajoute cette clé et cette valeur dans le stockage. Si la clé existe déjà, elle met à jour la valeur
-                //puis je dois convertir les données en JSON avec .strignify
-
-                
+                //puis je dois convertir les données en JSON avec .strignify              
             }
         
     
@@ -167,26 +165,17 @@ btn_ajouterPanier.addEventListener("click", (event)=>{
             }   
         }
 
-
-
         // sinon s'il n'existe aucun produit dans le local storage
         // on ajoute un produit au panier et crée un nouvel élément dans l’array.
         else{
-            let newBasketLS = [];
-            newBasketLS.push(choixProduct);
-            //productLocalStorage=[];  //alors je crée un tableau 
-            //productLocalStorage.push(choixProduct); //où je récupère le choix de l'utilisateur
-            localStorage.setItem("panier", JSON.stringify(newBasketLS));//mais je dois créer la clé et envoyer la donnée en objet Javascript
+            productLocalStorage=[];  //alors je crée un tableau 
+            productLocalStorage.push(choixProduct); //où je récupère le choix de l'utilisateur
+            localStorage.setItem("panier", JSON.stringify(productLocalStorage));//mais je dois créer la clé et envoyer la donnée en objet Javascript
         //set.Item : cette méthode ajoute cette clé et cette valeur dans le stockage. Si la clé existe déjà, elle met à jour la valeur
         //puis je dois convertir les données en JSON avec .strignify
         }
-
-        ///
-
-    }
+  
+        window.alert("votre produit a été ajouté au panier")
+        //window.location.href = "cart.html" permet de renvoyer vers le panier
+    }   
 })
-
-
-
-
-
