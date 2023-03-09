@@ -126,7 +126,7 @@ btn_ajouterPanier.addEventListener("click", (event)=>{
         //Déclaration d'une variable dans laquelle se trouve les valeurs du local storage
         let productLocalStorage = JSON.parse (localStorage.getItem("panier"));
         //JSON.parse convertit les données JSON du localStorage en objet Javascript 
-        //Lit ds le local storage, cette méthode renvoie la valeur de la clé correspondante "produit"
+        //Lit ds le local storage, cette méthode renvoie la valeur de la clé correspondante "panier"
 
  
 
