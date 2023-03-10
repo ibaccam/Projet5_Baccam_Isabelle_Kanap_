@@ -70,9 +70,44 @@ async function displayPanier (){
           </div>
         </div>
       </article>`;
+    
+      updateQuantity ()
     }
   }
 }
 displayPanier ()
 
+
+/*-----------------------------------------------------------------------------
+       Gérer la modification et la suppression de produit dans la page panier
+--------------------------------------------------------------------------------*/
+
+/*-----------------------------------------------------------------------------
+       Modifier une quantité à un produit
+--------------------------------------------------------------------------------*/
+function updateQuantity (){  //Fonction à déclarer dans la fonction "displayPanier"
+let articleQuantity = document.querySelectorAll('.itemQuantity'); // nouvelle quantité à déclarer et modif du DOM
+
+  //Pour chaque quantité modifié
+  for (let x = 0; x < articleQuantity.length; x++) {
+    articleQuantity[x].addEventListener('change', (event) => {
+    //déclaration d'une nouvelle quantité
+      let newArticleQuantity = articleQuantity[x].value;
+    //déclaration pour le localStorage
+      const newLS = {
+        id: productLocalStorage[x].id,
+        quantity: parseInt(newArticleQuantity),
+      };
+    //Il faut vérifier que la quantité est valide
+      if (newArticleQuantity ==="" || newArticleQuantity<= 0 || newArticleQuantity > 100) {
+        alert('Merci de sélectionner une quantité entre 1 et 100');
+      }
+    //Si ok, on récupère la nouvelle quantité dans le local storage
+      else { 
+        productLocalStorage[x] = newLS;
+        localStorage.setItem('panier', JSON.stringify(productLocalStorage));
+      }
+    })
+  }
+}
 
