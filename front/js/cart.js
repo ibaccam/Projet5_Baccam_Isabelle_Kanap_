@@ -2,11 +2,15 @@
         Afficher un tableau récapitulatif des achats dans le panier
 --------------------------------------------------------------------------------*/
 
-//On récupère les valeurs du local storage
+
+/*-----------------------------------------------------------------------------
+        Récupèrer les valeurs du local storage et API
+--------------------------------------------------------------------------------*/
+
 let productLocalStorage = JSON.parse (localStorage.getItem("panier"));
 console.log(productLocalStorage)
 //JSON.parse convertit les données JSON du localStorage en objet Javascript 
- //Lit ds le local storage, cette méthode renvoie la valeur de la clé correspondante "panier"
+//Lit ds le local storage, cette méthode renvoie la valeur de la clé correspondante "panier"
 
 //panierLocalStorage=[];  //et je crée un tableau
 
@@ -28,7 +32,7 @@ function getProductIdData(productId) { // argument
 }
 
 /*-----------------------------------------------------------------------------
-        Gestion du panier
+        Afficher les caractéristiques pour chaque article du local storage
 --------------------------------------------------------------------------------*/
 
 async function displayPanier (){
@@ -36,16 +40,14 @@ async function displayPanier (){
   if (productLocalStorage === null|| productLocalStorage.length === 0 ) {
       // si le panier est vide, on informe l'utilisateur
       document.querySelector('h1').innerHTML = 'Votre panier est vide';
-      // sinon on récupère ce qu'il y a dans le LS
   } 
+//sinon on récupère ce qu'il y a dans le LS
   else {
-    for(i=0; i < productLocalStorage.length; i++) { //pour chaque type article retrouvé dans le local storage
-      //.innerHTML injecte le nouveau contenu dans le DOM
-      let article = productLocalStorage[i]; //constante pour identifier un type d'article du local storage
-
-        productData = await getProductIdData(article.id); //constante pour le résulat d'un article
-        //console.log(productData);
-
+    for(i=0; i < productLocalStorage.length; i++) { //Boucle pour chaque type article retrouvé dans le local storage
+      let article = productLocalStorage[i]; //Constante pour identifier un type d'article du local storage
+      productData = await getProductIdData(article.id); //constante pour le résulat d'un article
+        
+//et on injecte le nouveau contenu dans le DOM
       document.getElementById('cart__items').innerHTML +=
       `<article class="cart__item" data-id="${article.id}" data-color="${article.color}">
         <div class="cart__item__img">
