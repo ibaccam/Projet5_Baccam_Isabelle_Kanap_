@@ -86,7 +86,7 @@ displayPanier ()
        Modifier une quantité à un produit
 --------------------------------------------------------------------------------*/
 function updateQuantity (){  //Fonction à déclarer dans la fonction "displayPanier"
-let articleQuantity = document.querySelectorAll('.itemQuantity'); // nouvelle quantité à déclarer et modif du DOM
+let articleQuantity = document.querySelectorAll('.itemQuantity'); //Constante pour déclarer la quantité et modif du DOM
 
   //Pour chaque quantité modifié
   for (let x = 0; x < articleQuantity.length; x++) {
