@@ -38,7 +38,7 @@ function getProductIdData(productId) { // argument
 async function displayPanier (){
 //On vérifie si le panier est vide
   if (productLocalStorage === null|| productLocalStorage.length === 0 ) {
-      // si le panier est vide, on informe l'utilisateur
+      // si le panier est vide (tableau vide), on informe l'utilisateur
       document.querySelector('h1').innerHTML = 'Votre panier est vide';
   } 
 //sinon on récupère ce qu'il y a dans le LS
@@ -71,7 +71,8 @@ async function displayPanier (){
         </div>
       </article>`;
     
-      updateQuantity ()
+      updateQuantity ();
+      deleteArticle();
     }
   }
 }
@@ -88,26 +89,99 @@ displayPanier ()
 function updateQuantity (){  //Fonction à déclarer dans la fonction "displayPanier"
 let articleQuantity = document.querySelectorAll('.itemQuantity'); //Constante pour déclarer la quantité et modif du DOM
 
-  //Pour chaque quantité modifié
+  //Pour chaque quantité, modifié
   for (let x = 0; x < articleQuantity.length; x++) {
     articleQuantity[x].addEventListener('change', (event) => {
+    event.preventDefault(); //ne rien faire si pas de modification
+    
     //déclaration d'une nouvelle quantité
       let newArticleQuantity = articleQuantity[x].value;
-    //déclaration pour le localStorage
+    
+      //déclaration pour le localStorage
       const newLS = {
         id: productLocalStorage[x].id,
         quantity: parseInt(newArticleQuantity),
-      };
-    //Il faut vérifier que la quantité est valide
+        color: productLocalStorage[x].color,
+      }
+    
+      //Il faut vérifier que la quantité est valide
       if (newArticleQuantity ==="" || newArticleQuantity<= 0 || newArticleQuantity > 100) {
         alert('Merci de sélectionner une quantité entre 1 et 100');
       }
-    //Si ok, on récupère la nouvelle quantité dans le local storage
+    
+      //Si ok, on récupère la nouvelle quantité dans le local storage
       else { 
         productLocalStorage[x] = newLS;
         localStorage.setItem('panier', JSON.stringify(productLocalStorage));
+        alert("La quantité de votre produit a bien été mise à jour."); //alerte pour confirmer à l'utilisateur la modification de la quantité
       }
+      totalPanier();
     })
   }
 }
 
+
+/*----------------------------------------------------------
+      Supprimer un produit
+----------------------------------------------------------*/
+function deleteArticle(){  //Fonction à déclarer dans la fonction "displayPanier"
+  let articleDelete = document.querySelectorAll('.deleteItem'); //Constante pour déclarer la suppression et déclaration dans le DOM
+  
+    //Pour chaque article supprimé
+    for (let y = 0; y < articleDelete.length; y++) {
+      articleDelete[y].addEventListener('click', (event) => {
+      event.preventDefault(); //ne rien faire s'il n'est pas cliqué
+      
+      // sélection de l'id et couleur du produit qui va être supprimé
+      let id_suppression= productLocalStorage[y].id;
+      let color_suppression=productLocalStorage[y].color;
+
+      // avec la methode filter je sélectionne les élements à garder et je supprime l'élement où nous avons demandé une suppression
+      productLocalStorage=productLocalStorage.filter(
+        (el) =>el.id!==id_suppression || el.color!==color_suppression);
+      
+      //on met à jour le localstorage
+      localStorage.setItem('panier', JSON.stringify(productLocalStorage));
+      alert ("Le produit a été supprimé du panier")    
+      window.location.href = "cart.html"; //permet de relancer la page panier
+      
+      });
+  }
+}
+
+
+/*----------------------------------------------------------
+      Total Panier
+----------------------------------------------------------*/
+
+async function totalPanier() {
+  //Déclaration des variables en tant que nombre
+  let totalPrice = 0; 
+  let totalQuantity = 0; 
+
+  //si il y a des articles dans le panier, alors
+  if(productLocalStorage.length !=0){
+      for (let t = 0; t < productLocalStorage.length; t++){  // pour chaque article, il va récupérer le prix et la quantité et faire la somme
+          let resultStorage = productLocalStorage[t]; 
+          let article = await getProductIdData(resultStorage.id); 
+          totalPrice += (resultStorage.quantity) * (article.price); 
+          totalQuantity += (resultStorage.quantity);
+      }
+  }
+
+  // injecte le nouveau contenu dans le DOM 
+  let globalQuantity = document.getElementById('totalQuantity');
+  globalQuantity.innerHTML = totalQuantity ;
+
+  let globalPrice = document.getElementById('totalPrice');
+  globalPrice.innerHTML =  totalPrice;
+
+}
+
+//déclaration de la fonction asynchrone 
+totalPanier();
+
+
+/*----------------------------------------------------------
+      Passer commande
+----------------------------------------------------------*/
