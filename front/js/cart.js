@@ -181,7 +181,3 @@ async function totalPanier() {
 //déclaration de la fonction asynchrone 
 totalPanier();
 
-
-/*----------------------------------------------------------
-      Passer commande
-----------------------------------------------------------*/
