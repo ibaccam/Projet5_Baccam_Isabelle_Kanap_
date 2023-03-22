@@ -43,9 +43,9 @@ async function displayPanier (){
   } 
 //sinon on récupère ce qu'il y a dans le LS
   else {
-    for(i=0; i < productLocalStorage.length; i++) { //Boucle pour chaque type article retrouvé dans le local storage
+    for(let i = 0; i < productLocalStorage.length; i++) { //Boucle pour chaque type article retrouvé dans le local storage
       let article = productLocalStorage[i]; //Constante pour identifier un type d'article du local storage
-      productData = await getProductIdData(article.id); //constante pour le résulat d'un article
+      let productData = await getProductIdData(article.id); //constante pour le résulat d'un article
         
 //et on injecte le nouveau contenu dans le DOM
       document.getElementById('cart__items').innerHTML +=
@@ -161,11 +161,11 @@ async function totalPanier() {
 
   //si il y a des articles dans le panier, alors
   if(productLocalStorage.length !=0){
-      for (let t = 0; t < productLocalStorage.length; t++){  // pour chaque article, il va récupérer le prix et la quantité et faire la somme
-          let resultStorage = productLocalStorage[t]; 
-          let article = await getProductIdData(resultStorage.id); 
-          totalPrice += (resultStorage.quantity) * (article.price); 
-          totalQuantity += (resultStorage.quantity);
+      for(let i = 0; i < productLocalStorage.length; i++) { //Boucle pour chaque type article retrouvé dans le local storage
+        let article = productLocalStorage[i]; //Constante pour identifier un type d'article du local storage
+        let productData = await getProductIdData(article.id); //Constante pour le résulat d'un article
+        totalPrice += (article.quantity) * (productData.price); //Pour chaque article, il va récupérer le prix et la quantité et faire la somme
+        totalQuantity += (article.quantity); //Nb d'article au total
       }
   }
 
@@ -181,7 +181,3 @@ async function totalPanier() {
 //déclaration de la fonction asynchrone 
 totalPanier();
 
-
-/*----------------------------------------------------------
-      Passer commande
-----------------------------------------------------------*/
