@@ -120,10 +120,10 @@ let articleQuantity = document.querySelectorAll('.itemQuantity'); //Constante po
   }
 }
 
+/*-----------------------------------------------------------------------------
+       Supprimer un produit
+--------------------------------------------------------------------------------*/
 
-/*----------------------------------------------------------
-      Supprimer un produit
-----------------------------------------------------------*/
 function deleteArticle(){  //Fonction à déclarer dans la fonction "displayPanier"
   let articleDelete = document.querySelectorAll('.deleteItem'); //Constante pour déclarer la suppression et déclaration dans le DOM
   
@@ -149,10 +149,9 @@ function deleteArticle(){  //Fonction à déclarer dans la fonction "displayPani
   }
 }
 
-
-/*----------------------------------------------------------
-      Total Panier
-----------------------------------------------------------*/
+/*-----------------------------------------------------------------------------
+       Total Panier
+--------------------------------------------------------------------------------*/
 
 async function totalPanier() {
   //Déclaration des variables pour afficher "0" par défaut
@@ -167,7 +166,7 @@ async function totalPanier() {
         totalPrice += parseInt(article.quantity) * parseInt(productData.price); //Pour chaque article, il va récupérer le prix et la quantité et faire la somme
         totalQuantity += parseInt(article.quantity); //Nb d'article au total
       }
- }
+  }
 
   //injecte le nouveau contenu dans le DOM 
   let globalQuantity = document.getElementById('totalQuantity');
@@ -182,10 +181,9 @@ async function totalPanier() {
 totalPanier();
 
 
-/*----------------------------------------------------------
-      Formulaire
-----------------------------------------------------------*/
-
+/*-----------------------------------------------------------------------------
+       Formulaire
+--------------------------------------------------------------------------------*/
 
 //Récupérer et analyser les données saisies par l’utilisateur dans le formulaire.
 //Afficher un message d’erreur si besoin (par exemple lorsqu’unutilisateur renseigne “bonjour” dans le champ “e-mail”).
@@ -196,14 +194,13 @@ totalPanier();
 
 
 
-
-/*----------------------------------------------------------
+/*-----------------------------------------------------------------------------
       Formulaire
       Récupérer les valeurs du formulaire et les mettre dans le local Storage
-----------------------------------------------------------*/
+--------------------------------------------------------------------------------*/
 
 
-// sélection du dom
+//sélection du dom
 const firstNameInput = document.getElementById('firstName');
 const lastNameInput = document.getElementById('lastName');
 const addressInput = document.getElementById('address');
@@ -211,15 +208,15 @@ const cityInput = document.getElementById('city');
 const emailInput = document.getElementById('email');
 
 
-// on vient cibler le btn 'commander' du formulaire
+//on vient cibler le bouton 'commander' du formulaire
 const order = document.getElementById('order');
 
 //au click
 order.addEventListener('click', (event) => {
 event.preventDefault();
 
-let formulaire = {   //Récupérer les valeurs du formulaire dans un objet / une seule clé
-  firstName: firstNameInput.value, //document.getElementById('firstName').value
+let formulaire = {   //Récupérer les valeurs du formulaire dans un objet / une seule clé "formulaire" avec les propriétés (firstName... nom au choix)
+  firstName: firstNameInput.value, 
   lastName: lastNameInput.value,
   address: addressInput.value,
   city: cityInput.value,
@@ -227,15 +224,88 @@ let formulaire = {   //Récupérer les valeurs du formulaire dans un objet / une
 };
 
 
-
 //Gestion du formulaire
+  //Vérification des données via des regex (expression régulière) et 
+  //Afficher un message d’erreur si nécessaire.
 
 
+function prenomControle(){
+//Controle du prenom
+const firstNameInputcontrole = firstNameInput.value;
+if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(firstNameInputcontrole)){
+  document.getElementById('firstNameErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+  return true;
+}else{
+  document.getElementById('firstNameErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+  return false;
+}
+};
+
+function nomControle(){
+  //Controle du nom
+  const lastNameInputcontrole = lastNameInput.value;
+  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(lastNameInputcontrole)){
+    document.getElementById('lastNameErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    return true;
+  }else{
+    document.getElementById('lastNameErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+    return false;
+  }
+  };
+
+function addressControle(){
+  //Controle de l'adresse
+  const addressInputcontrole = addressInput.value;
+  if(/^[a-zA-Z0-9.,-_ ]{5,50}[ ]{0,2}$/.test(addressInputcontrole)){
+    document.getElementById('addressErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    return true;
+  }else{
+    document.getElementById('addressErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+    return false;
+  }
+  };
+
+function cityControle(){
+  //Controle de la ville
+  const cityInputcontrole = cityInput.value;
+  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(cityInputcontrole)){
+    document.getElementById('cityErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    return true;
+  }else{
+    document.getElementById('cityErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+    return false;
+  }
+  };
+  
+function emailcontrole(){
+  //Controle de l'email
+  const emailInputcontrole = emailInput.value;
+  if(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$/.test(emailInputcontrole)){
+    document.getElementById('emailErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    return true;
+  }else{
+    document.getElementById('emailErrorMsg').textContent = "Veuillez remplir ce champs";  //pour avoir une alerte sous le champs concerné
+    return false;
+  }
+};
+
+// /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z][2,4]$/,
+      //^ début de la chaîne de caractère autorisée
+        //[a-z: de a à z en minuscule, de A-Z en majuscule 0-9: des chiffres de 0à 9, .-_ : caractères autorisés]
+        //+ permet de dire que ces caractères peuvent être écrit une fois ou plrs fois
+        //[@]{1} on doit trouvé l'@ une seule fois
+        //[a-zA-Z0-9.-_]+ : autorisation après l'@
+        // [.]{1} le point a retrouver qu'une seule fois
+        // [a-z]: signfie qu'après le . uniquement en minuscule [2,4} et nombre de lettres autorisées : 2min 4max
+        // $ fin de notre expresion régulière
 
 
+if(prenomControle() && nomControle() && addressControle() && cityControle() && emailcontrole()){ // il faut que les fonctions soient true (&&)
 //Récupération du formulaire pour le mettre ds le local storage
-localStorage.setItem('formulaire', JSON.stringify(formulaire)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractère
-
+localStorage.setItem('formulaire', JSON.stringify(formulaire)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractères
+} else{
+  alert("veuillez bien remplir le formulaire");
+}
 }
 )
 
