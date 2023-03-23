@@ -155,29 +155,93 @@ function deleteArticle(){  //Fonction à déclarer dans la fonction "displayPani
 ----------------------------------------------------------*/
 
 async function totalPanier() {
-  //Déclaration des variables en tant que nombre
+  //Déclaration des variables pour afficher "0" par défaut
   let totalPrice = 0; 
   let totalQuantity = 0; 
 
   //si il y a des articles dans le panier, alors
-  if(productLocalStorage.length !=0){
+  if(productLocalStorage.length != 0 || productLocalStorage != null){
       for(let i = 0; i < productLocalStorage.length; i++) { //Boucle pour chaque type article retrouvé dans le local storage
         let article = productLocalStorage[i]; //Constante pour identifier un type d'article du local storage
         let productData = await getProductIdData(article.id); //Constante pour le résulat d'un article
-        totalPrice += (article.quantity) * (productData.price); //Pour chaque article, il va récupérer le prix et la quantité et faire la somme
-        totalQuantity += (article.quantity); //Nb d'article au total
+        totalPrice += parseInt(article.quantity) * parseInt(productData.price); //Pour chaque article, il va récupérer le prix et la quantité et faire la somme
+        totalQuantity += parseInt(article.quantity); //Nb d'article au total
       }
-  }
+ }
 
-  // injecte le nouveau contenu dans le DOM 
+  //injecte le nouveau contenu dans le DOM 
   let globalQuantity = document.getElementById('totalQuantity');
   globalQuantity.innerHTML = totalQuantity ;
 
   let globalPrice = document.getElementById('totalPrice');
-  globalPrice.innerHTML =  totalPrice;
+  globalPrice.innerHTML = totalPrice;
 
 }
 
 //déclaration de la fonction asynchrone 
 totalPanier();
+
+
+/*----------------------------------------------------------
+      Formulaire
+----------------------------------------------------------*/
+
+
+//Récupérer et analyser les données saisies par l’utilisateur dans le formulaire.
+//Afficher un message d’erreur si besoin (par exemple lorsqu’unutilisateur renseigne “bonjour” dans le champ “e-mail”).
+//Constituer un objet contact (à partir des données du formulaire) et un tableau de produits.
+
+//Vérification des données via des regex (expression régulière) et 
+//Afficher un message d’erreur si nécessaire.
+
+
+
+
+/*----------------------------------------------------------
+      Formulaire
+      Récupérer les valeurs du formulaire et les mettre dans le local Storage
+----------------------------------------------------------*/
+
+
+// sélection du dom
+const firstNameInput = document.getElementById('firstName');
+const lastNameInput = document.getElementById('lastName');
+const addressInput = document.getElementById('address');
+const cityInput = document.getElementById('city');
+const emailInput = document.getElementById('email');
+
+
+// on vient cibler le btn 'commander' du formulaire
+const order = document.getElementById('order');
+
+//au click
+order.addEventListener('click', (event) => {
+event.preventDefault();
+
+let formulaire = {   //Récupérer les valeurs du formulaire dans un objet / une seule clé
+  firstName: firstNameInput.value, //document.getElementById('firstName').value
+  lastName: lastNameInput.value,
+  address: addressInput.value,
+  city: cityInput.value,
+  email: emailInput.value
+};
+
+
+
+//Gestion du formulaire
+
+
+
+
+//Récupération du formulaire pour le mettre ds le local storage
+localStorage.setItem('formulaire', JSON.stringify(formulaire)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractère
+
+}
+)
+
+
+/*----------------------------------------------------------
+      envoyer vers serveur video 92=> produit et formulaire
+----------------------------------------------------------*/
+
 
