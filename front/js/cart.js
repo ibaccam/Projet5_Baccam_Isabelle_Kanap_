@@ -158,6 +158,7 @@ async function totalPanier() {
   let totalPrice = 0; 
   let totalQuantity = 0; 
 
+
   //si il y a des articles dans le panier, alors
   if(productLocalStorage.length != 0 || productLocalStorage != null){
       for(let i = 0; i < productLocalStorage.length; i++) { //Boucle pour chaque type article retrouvé dans le local storage
@@ -181,22 +182,9 @@ async function totalPanier() {
 totalPanier();
 
 
-/*-----------------------------------------------------------------------------
-       Formulaire
---------------------------------------------------------------------------------*/
-
-//Récupérer et analyser les données saisies par l’utilisateur dans le formulaire.
-//Afficher un message d’erreur si besoin (par exemple lorsqu’unutilisateur renseigne “bonjour” dans le champ “e-mail”).
-//Constituer un objet contact (à partir des données du formulaire) et un tableau de produits.
-
-//Vérification des données via des regex (expression régulière) et 
-//Afficher un message d’erreur si nécessaire.
-
-
 
 /*-----------------------------------------------------------------------------
-      Formulaire
-      Récupérer les valeurs du formulaire et les mettre dans le local Storage
+      Formulaire      
 --------------------------------------------------------------------------------*/
 
 
@@ -208,83 +196,95 @@ const cityInput = document.getElementById('city');
 const emailInput = document.getElementById('email');
 
 
-//on vient cibler le bouton 'commander' du formulaire
-const order = document.getElementById('order');
-
-//au click
-order.addEventListener('click', (event) => {
-event.preventDefault();
-
-let formulaire = {   //Récupérer les valeurs du formulaire dans un objet / une seule clé "formulaire" avec les propriétés (firstName... nom au choix)
-  firstName: firstNameInput.value, 
-  lastName: lastNameInput.value,
-  address: addressInput.value,
-  city: cityInput.value,
-  email: emailInput.value
-};
-
-
 //Gestion du formulaire
+  //Récupérer et analyser les données saisies par l’utilisateur dans le formulaire.
+  //Afficher un message d’erreur si besoin (par exemple lorsqu’un utilisateur renseigne “bonjour” dans le champ “e-mail”). 
+  //Constituer un objet contact (à partir des données du formulaire) et un tableau de produits.
   //Vérification des données via des regex (expression régulière) et 
-  //Afficher un message d’erreur si nécessaire.
+  //Afficher un message d’erreur si nécessaire. 
 
+//Contrôle du Prénom
+firstNameInput.addEventListener("change", function(){ //écoute de l'événement change sur l'input prénom
+let inputValue = this.value; //variable pour définir la valeur modifiée de l'input
+  firstNameValidation(inputValue); //lancement de la fonction de validation
+});
 
-function prenomControle(){
-//Controle du prenom
+function firstNameValidation (){
 const firstNameInputcontrole = firstNameInput.value;
-if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(firstNameInputcontrole)){
+if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(firstNameInputcontrole)){ // vérification des données via des regex
   document.getElementById('firstNameErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
   return true;
 }else{
-  document.getElementById('firstNameErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+  document.getElementById('firstNameErrorMsg').textContent = "Veuillez saisir un Prénom correct (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
   return false;
 }
 };
 
-function nomControle(){
-  //Controle du nom
+//Contrôle du Nom
+lastNameInput.addEventListener("change", function(){ //écoute de l'événement change sur l'input
+  let inputValue = this.value; //variable pour définir la valeur modifiée de l'input
+    lastNameValidation(inputValue); //lancement de la fonction de validation
+  });
+  
+  function lastNameValidation (){
   const lastNameInputcontrole = lastNameInput.value;
-  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(lastNameInputcontrole)){
+  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(lastNameInputcontrole)){ // vérification des données via des regex
     document.getElementById('lastNameErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
     return true;
   }else{
-    document.getElementById('lastNameErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+    document.getElementById('lastNameErrorMsg').textContent = "Veuillez saisir un Nom correct (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
     return false;
   }
   };
 
-function addressControle(){
-  //Controle de l'adresse
+//Controle de l'adresse
+addressInput.addEventListener("change", function(){ //écoute de l'événement change sur l'input
+  let inputValue = this.value; //variable pour définir la valeur modifiée de l'input
+   addressValidation(inputValue); //lancement de la fonction de validation
+  });
+
+  function addressValidation (){
   const addressInputcontrole = addressInput.value;
-  if(/^[a-zA-Z0-9.,-_ ]{5,50}[ ]{0,2}$/.test(addressInputcontrole)){
+  if(/^[a-zA-Z0-9.,-_ ]{5,50}[ ]{0,2}$/.test(addressInputcontrole)){ // vérification des données via des regex
     document.getElementById('addressErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
     return true;
   }else{
-    document.getElementById('addressErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+    document.getElementById('addressErrorMsg').textContent = "Veuillez renseigner une Adresse correcte. (Minimum 5 caractères, symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
     return false;
   }
   };
 
-function cityControle(){
-  //Controle de la ville
+
+//Controle de la ville
+cityInput.addEventListener("change", function(){ //écoute de l'événement change sur l'input
+  let inputValue = this.value; //variable pour définir la valeur modifiée de l'input
+   cityValidation(inputValue); //lancement de la fonction de validation
+  });
+
+ function cityValidation (){
   const cityInputcontrole = cityInput.value;
-  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(cityInputcontrole)){
+  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(cityInputcontrole)){ // vérification des données via des regex
     document.getElementById('cityErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
     return true;
   }else{
-    document.getElementById('cityErrorMsg').textContent = "Veuillez remplir ce champs";  // pour avoir une alerte sous le champs concerné
+    document.getElementById('cityErrorMsg').textContent = "Veuillez saisir une Ville correcte (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
     return false;
   }
   };
-  
-function emailcontrole(){
-  //Controle de l'email
+
+//Controle de de l'email
+emailInput.addEventListener("change", function(){ //écoute de l'événement change sur l'input
+  let inputValue = this.value; //variable pour définir la valeur modifiée de l'input
+   emailValidation(inputValue); //lancement de la fonction de validation
+  });
+
+  function emailValidation (){
   const emailInputcontrole = emailInput.value;
-  if(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$/.test(emailInputcontrole)){
+  if(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$/.test(emailInputcontrole)){ // vérification des données via des regex
     document.getElementById('emailErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
     return true;
   }else{
-    document.getElementById('emailErrorMsg').textContent = "Veuillez remplir ce champs";  //pour avoir une alerte sous le champs concerné
+    document.getElementById('emailErrorMsg').textContent = "Veuillez saisir un Email correct (doit contenir @, exemple : utilisateur@exemple.com)";  //pour avoir une alerte sous le champs concerné
     return false;
   }
 };
@@ -300,14 +300,39 @@ function emailcontrole(){
         // $ fin de notre expresion régulière
 
 
-if(prenomControle() && nomControle() && addressControle() && cityControle() && emailcontrole()){ // il faut que les fonctions soient true (&&)
+
+/*-----------------------------------------------------------------------------
+      Récupérer les valeurs contrôlées du formulaire et les envoyer      
+--------------------------------------------------------------------------------*/
+
+
+//on vient cibler le bouton 'commander' du formulaire
+const order = document.getElementById('order');
+
+//au click du bouton "Commander"
+order.addEventListener('click', (event) => {
+event.preventDefault();
+
+let formulaire = {   //Récupérer les valeurs du formulaire dans un objet / une seule clé "formulaire" avec les propriétés (firstName... nom au choix)
+  firstName: firstNameInput.value, 
+  lastName: lastNameInput.value,
+  address: addressInput.value,
+  city: cityInput.value,
+  email: emailInput.value
+};
+if (productLocalStorage == null || productLocalStorage == 0) {
+  alert(`Votre panier est vide, merci de sélectionner des produits pour passer une commande`);
+}
+
+else{
+  if(firstNameValidation() && lastNameValidation() && addressValidation() && cityValidation() && emailValidation()){ // il faut que les fonctions soient true (&&)
 //Récupération du formulaire pour le mettre ds le local storage
 localStorage.setItem('formulaire', JSON.stringify(formulaire)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractères
 } else{
-  alert("veuillez bien remplir le formulaire");
+  alert("Merci de renseigner correctement tous les champs du formulaire avant de valider votre commande.");
 }
 }
-)
+})
 
 
 /*----------------------------------------------------------
