@@ -216,6 +216,7 @@ if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(firstNameInputcontrole)){ //
   return true;
 }else{
   document.getElementById('firstNameErrorMsg').textContent = "Veuillez saisir un Prénom correct (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
+  firstNameInput.setAttribute('style', 'border:3px solid red;');
   return false;
 }
 };
@@ -233,6 +234,7 @@ lastNameInput.addEventListener("change", function(){ //écoute de l'événement 
     return true;
   }else{
     document.getElementById('lastNameErrorMsg').textContent = "Veuillez saisir un Nom correct (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
+    lastNameInput.setAttribute('style', 'border:3px solid red;');
     return false;
   }
   };
@@ -250,6 +252,7 @@ addressInput.addEventListener("change", function(){ //écoute de l'événement c
     return true;
   }else{
     document.getElementById('addressErrorMsg').textContent = "Veuillez renseigner une Adresse correcte. (Minimum 5 caractères, symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
+    addressInput.setAttribute('style', 'border:3px solid red;');
     return false;
   }
   };
@@ -268,6 +271,7 @@ cityInput.addEventListener("change", function(){ //écoute de l'événement chan
     return true;
   }else{
     document.getElementById('cityErrorMsg').textContent = "Veuillez saisir une Ville correcte (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
+    cityInput.setAttribute('style', 'border:3px solid red;');
     return false;
   }
   };
@@ -285,6 +289,7 @@ emailInput.addEventListener("change", function(){ //écoute de l'événement cha
     return true;
   }else{
     document.getElementById('emailErrorMsg').textContent = "Veuillez saisir un Email correct (doit contenir @, exemple : utilisateur@exemple.com)";  //pour avoir une alerte sous le champs concerné
+    emailInput.setAttribute('style', 'border:3px solid red;');
     return false;
   }
 };
