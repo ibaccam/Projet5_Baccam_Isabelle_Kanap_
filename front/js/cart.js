@@ -1,12 +1,4 @@
 /*-----------------------------------------------------------------------------
-        Afficher un tableau récapitulatif des achats dans le panier
---------------------------------------------------------------------------------*/
-// on crée une variable pour envoyer la confirmation 
-let orderId = "";
-
-
-
-/*-----------------------------------------------------------------------------
         Récupèrer les valeurs du local storage et API
 --------------------------------------------------------------------------------*/
 
@@ -314,9 +306,8 @@ emailInput.addEventListener("change", function(){ //écoute de l'événement cha
 
 
 /*-----------------------------------------------------------------------------
-      Récupérer les valeurs contrôlées du formulaire et les envoyer      
+    Constituer un objet contact (à partir des données du formulaire) et un tableau de produits.     
 --------------------------------------------------------------------------------*/
-
 
 //on vient cibler le bouton 'commander' du formulaire
 const order = document.getElementById('order');
@@ -325,12 +316,23 @@ const order = document.getElementById('order');
 order.addEventListener('click', (event) => {
 event.preventDefault();
 
-let formulaire = {   //Récupérer les valeurs du formulaire dans un objet / une seule clé "formulaire" avec les propriétés (firstName... nom au choix)
-  firstName: firstNameInput.value, 
-  lastName: lastNameInput.value,
-  address: addressInput.value,
-  city: cityInput.value,
-  email: emailInput.value
+
+//on crée un tableau de tous les IDs des articles du panier
+let productID = [];
+for (let a = 0; a < productLocalStorage.length; a++) {
+  productID.push(productLocalStorage[a].id);
+}
+
+//on crée un objet contact
+const contactId = {
+  contact: {
+    firstName:firstNameInput.value,
+    lastName: lastNameInput.value,
+    address: addressInput.value,
+    city: cityInput.value,
+    email: emailInput.value,
+  },
+  products: productID, // fournit la liste des IDs à transmettre
 };
 if (productLocalStorage == null || productLocalStorage == 0) {
   alert(`Votre panier est vide, merci de sélectionner des produits pour passer une commande`);
@@ -339,20 +341,17 @@ if (productLocalStorage == null || productLocalStorage == 0) {
 else{
   if(firstNameValidation() && lastNameValidation() && addressValidation() && cityValidation() && emailValidation()){ // il faut que les fonctions soient true (&&)
 //Récupération du formulaire pour le mettre ds le local storage
-localStorage.setItem('formulaire', JSON.stringify(formulaire)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractères
+localStorage.setItem('contactId', JSON.stringify(contactId)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractères
 alert( "Votre commande a bien été prise en compte");
 
 // Appel de la fonction qui envoie les données au serveur
-envoiServeur();
+sendCommand(contactId);
 
 } else{
   alert("Merci de renseigner correctement tous les champs du formulaire avant de valider votre commande.");
 }
 }
- 
-
 });
-
 
 
 /*----------------------------------------------------------
@@ -363,33 +362,20 @@ envoiServeur();
 //Le tableau des produits envoyé au back-end doit être un array de strings product-ID. 
 
 
-//Fonction pour envoyer l'ensemble des produits et formulaire sur le serveur
-function envoiServeur() { 
-  return fetch('http://localhost:3000/api/products/order', { //fetch pour requêter l'API
-    method: 'POST', //en méthode post
-    headers: { //avec un contenu json
-  
-  'Content-Type' : 'application/json',
-    },
-    body: JSON.stringify({formulaire, productLocalStorage}), //contenu de la commande en json
+//Fonction pour envoyer le formulaire et les id sur le serveur
+async function sendCommand(contactId) {
+  await fetch('http://localhost:3000/api/products/order', {
+    method: 'POST',
+    body: JSON.stringify(contactId),
+    headers: { 'Content-Type': 'application/json' },
   })
-  .then((response) => response.json()) //puis recevoir la réponse en json
-  .then((data) => {
-    const orderId = data.orderId;
-        
-    // si orderId n'est pas undefined on redirige l'utilisateur vers la page confirmation
-    //if (orderId != undefined) {
-    //location.href = 'confirmation.html?orderId=' + orderId;
-    //}
-  });
-  envoiServeur();
+    .then((res) => res.json())
+    .then((data) => {
+      const orderId = data.orderId;
+      window.location.href = 'confirmation.html?orderId=' + orderId;
+    })
+    .catch((err) => {
+      console.error(err);
+      alert('erreur: ' + err);
+    });
 }
-
-
-
-  
-
-
-
-
-
