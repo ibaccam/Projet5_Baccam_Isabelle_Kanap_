@@ -1,6 +1,9 @@
 /*-----------------------------------------------------------------------------
         Afficher un tableau récapitulatif des achats dans le panier
 --------------------------------------------------------------------------------*/
+// on crée une variable pour envoyer la confirmation 
+let orderId = "";
+
 
 
 /*-----------------------------------------------------------------------------
@@ -12,7 +15,6 @@ console.log(productLocalStorage)
 //JSON.parse convertit les données JSON du localStorage en objet Javascript 
 //Lit ds le local storage, cette méthode renvoie la valeur de la clé correspondante "panier"
 
-//panierLocalStorage=[];  //et je crée un tableau
 
 
 //Fonction pour récupérer les autres caractéristiques du produit (nom, image, prix)
@@ -213,6 +215,7 @@ function firstNameValidation (){
 const firstNameInputcontrole = firstNameInput.value;
 if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(firstNameInputcontrole)){ // vérification des données via des regex
   document.getElementById('firstNameErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+  firstNameInput.setAttribute('style', 'border:1px solid #767676;');
   return true;
 }else{
   document.getElementById('firstNameErrorMsg').textContent = "Veuillez saisir un Prénom correct (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
@@ -231,6 +234,7 @@ lastNameInput.addEventListener("change", function(){ //écoute de l'événement 
   const lastNameInputcontrole = lastNameInput.value;
   if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(lastNameInputcontrole)){ // vérification des données via des regex
     document.getElementById('lastNameErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    lastNameInput.setAttribute('style', 'border:1px solid #767676;');
     return true;
   }else{
     document.getElementById('lastNameErrorMsg').textContent = "Veuillez saisir un Nom correct (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
@@ -247,8 +251,9 @@ addressInput.addEventListener("change", function(){ //écoute de l'événement c
 
   function addressValidation (){
   const addressInputcontrole = addressInput.value;
-  if(/^[a-zA-Z0-9.,-_ ]{5,50}[ ]{0,2}$/.test(addressInputcontrole)){ // vérification des données via des regex
+  if(/^[a-zA-Z0-9.,-_\é\è\ê\ë\ï\œ\â\-\s]{5,50}[ ]{0,2}$/.test(addressInputcontrole)){ // vérification des données via des regex
     document.getElementById('addressErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    addressInput.setAttribute('style', 'border:1px solid #767676;');
     return true;
   }else{
     document.getElementById('addressErrorMsg').textContent = "Veuillez renseigner une Adresse correcte. (Minimum 5 caractères, symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
@@ -266,8 +271,9 @@ cityInput.addEventListener("change", function(){ //écoute de l'événement chan
 
  function cityValidation (){
   const cityInputcontrole = cityInput.value;
-  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/.test(cityInputcontrole)){ // vérification des données via des regex
+  if(/^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\â\-\s]+$/.test(cityInputcontrole)){ // vérification des données via des regex
     document.getElementById('cityErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    cityInput.setAttribute('style', 'border:1px solid #767676;');
     return true;
   }else{
     document.getElementById('cityErrorMsg').textContent = "Veuillez saisir une Ville correcte (Minimum 2 caractères, chiffres et symboles spéciaux interdits)";  // pour avoir une alerte sous le champs concerné
@@ -286,6 +292,7 @@ emailInput.addEventListener("change", function(){ //écoute de l'événement cha
   const emailInputcontrole = emailInput.value;
   if(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,4}$/.test(emailInputcontrole)){ // vérification des données via des regex
     document.getElementById('emailErrorMsg').textContent = ""; // si ok, ne plus afficher le message d'alerte
+    emailInput.setAttribute('style', 'border:1px solid #767676;');
     return true;
   }else{
     document.getElementById('emailErrorMsg').textContent = "Veuillez saisir un Email correct (doit contenir @, exemple : utilisateur@exemple.com)";  //pour avoir une alerte sous le champs concerné
@@ -333,15 +340,56 @@ else{
   if(firstNameValidation() && lastNameValidation() && addressValidation() && cityValidation() && emailValidation()){ // il faut que les fonctions soient true (&&)
 //Récupération du formulaire pour le mettre ds le local storage
 localStorage.setItem('formulaire', JSON.stringify(formulaire)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractères
+alert( "Votre commande a bien été prise en compte");
+
+// Appel de la fonction qui envoie les données au serveur
+envoiServeur();
+
 } else{
   alert("Merci de renseigner correctement tous les champs du formulaire avant de valider votre commande.");
 }
 }
-})
+ 
+
+});
+
 
 
 /*----------------------------------------------------------
-      envoyer vers serveur video 92=> produit et formulaire
+      Validation des données et envoi au serveur
 ----------------------------------------------------------*/
+
+//l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. 
+//Le tableau des produits envoyé au back-end doit être un array de strings product-ID. 
+
+
+//Fonction pour envoyer l'ensemble des produits et formulaire sur le serveur
+function envoiServeur() { 
+  return fetch('http://localhost:3000/api/products/order', { //fetch pour requêter l'API
+    method: 'POST', //en méthode post
+    headers: { //avec un contenu json
+  
+  'Content-Type' : 'application/json',
+    },
+    body: JSON.stringify({formulaire, productLocalStorage}), //contenu de la commande en json
+  })
+  .then((response) => response.json()) //puis recevoir la réponse en json
+  .then((data) => {
+    const orderId = data.orderId;
+        
+    // si orderId n'est pas undefined on redirige l'utilisateur vers la page confirmation
+    //if (orderId != undefined) {
+    //location.href = 'confirmation.html?orderId=' + orderId;
+    //}
+  });
+  envoiServeur();
+}
+
+
+
+  
+
+
+
 
 
