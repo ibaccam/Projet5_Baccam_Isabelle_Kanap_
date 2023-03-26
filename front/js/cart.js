@@ -178,7 +178,8 @@ totalPanier();
 
 
 /*-----------------------------------------------------------------------------
-      Formulaire      
+      Formulaire
+      Validation des champs    
 --------------------------------------------------------------------------------*/
 
 
@@ -306,8 +307,12 @@ emailInput.addEventListener("change", function(){ //écoute de l'événement cha
 
 
 /*-----------------------------------------------------------------------------
-    Constituer un objet contact (à partir des données du formulaire) et un tableau de produits.     
---------------------------------------------------------------------------------*/
+      Formulaire
+      Envoi des données au serveur   
+--------------------------------------------------------------------------------*/        
+
+//l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. 
+//Le tableau des produits envoyé au back-end doit être un array de strings product-ID. 
 
 //on vient cibler le bouton 'commander' du formulaire
 const order = document.getElementById('order');
@@ -316,66 +321,69 @@ const order = document.getElementById('order');
 order.addEventListener('click', (event) => {
 event.preventDefault();
 
-
-//on crée un tableau de tous les IDs des articles du panier
-let productID = [];
-for (let a = 0; a < productLocalStorage.length; a++) {
-  productID.push(productLocalStorage[a].id);
-}
-
-//on crée un objet contact
-const contactId = {
-  contact: {
-    firstName:firstNameInput.value,
-    lastName: lastNameInput.value,
-    address: addressInput.value,
-    city: cityInput.value,
-    email: emailInput.value,
-  },
-  products: productID, // fournit la liste des IDs à transmettre
-};
+//si le panier est vide, on crée una alerte
 if (productLocalStorage == null || productLocalStorage == 0) {
   alert(`Votre panier est vide, merci de sélectionner des produits pour passer une commande`);
 }
-
+//sinon, si tous les champs sont renseignés correctement
 else{
   if(firstNameValidation() && lastNameValidation() && addressValidation() && cityValidation() && emailValidation()){ // il faut que les fonctions soient true (&&)
-//Récupération du formulaire pour le mettre ds le local storage
-localStorage.setItem('contactId', JSON.stringify(contactId)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractères
-alert( "Votre commande a bien été prise en compte");
 
-// Appel de la fonction qui envoie les données au serveur
-sendCommand(contactId);
+//on crée un objet contact
+    let contact= {
+        firstName:firstNameInput.value,
+        lastName: lastNameInput.value,
+        address: addressInput.value,
+        city: cityInput.value,
+        email: emailInput.value,
+    };
 
-} else{
-  alert("Merci de renseigner correctement tous les champs du formulaire avant de valider votre commande.");
-}
-}
+//et on envoi le formulaire pour le mettre ds le local storage
+    localStorage.setItem('contact', JSON.stringify(contact)); // JSON.stringify=> convertir l'objet (formulaire) en chaine de caractères
+    alert( "Votre commande a bien été prise en compte");
+
+//puis on crée un tableau de tous les IDs des articles du panier
+    let productID = [];
+    for (let a = 0; a < productLocalStorage.length; a++) {
+      productID.push(productLocalStorage[a].id);
+    }
+//on crée un objet à envoyer au serveur
+    let contactId = {  //avec le formulaire
+      contact: {
+        firstName:firstNameInput.value,
+        lastName: lastNameInput.value,
+        address: addressInput.value,
+        city: cityInput.value,
+        email: emailInput.value,
+      },
+      products: productID, // et le tableau des IDs à transmettre
+    };
+console.log(contactId);
+
+
+//Fonction pour envoyer les données au serveur
+    fetch('http://localhost:3000/api/products/order', {
+        method: 'POST',
+        body: JSON.stringify(contactId),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const orderId = data.orderId;
+          window.location.href = 'confirmation.html?orderId=' + orderId;
+        })
+        .catch((err) => {
+          console.error(err);
+          alert('erreur: ' + err);
+        });
+    }
+
+    else{
+      alert("Merci de renseigner correctement tous les champs du formulaire avant de valider votre commande.");
+    }
+  } 
 });
 
 
-/*----------------------------------------------------------
-      Validation des données et envoi au serveur
-----------------------------------------------------------*/
 
-//l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. 
-//Le tableau des produits envoyé au back-end doit être un array de strings product-ID. 
-
-
-//Fonction pour envoyer le formulaire et les id sur le serveur
-async function sendCommand(contactId) {
-  await fetch('http://localhost:3000/api/products/order', {
-    method: 'POST',
-    body: JSON.stringify(contactId),
-    headers: { 'Content-Type': 'application/json' },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      const orderId = data.orderId;
-      window.location.href = 'confirmation.html?orderId=' + orderId;
-    })
-    .catch((err) => {
-      console.error(err);
-      alert('erreur: ' + err);
-    });
-}
+//version4
