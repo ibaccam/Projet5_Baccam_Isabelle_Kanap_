@@ -1,12 +1,16 @@
 /*-----------------------------------------------------------------------------
-        Récupèrer les valeurs du local storage et API
+                          ***AFFICHAGE PANIER***
+--------------------------------------------------------------------------------*/
+
+
+/*-----------------------------------------------------------------------------
+        Récupèrer les valeurs du local storage et via API
 --------------------------------------------------------------------------------*/
 
 let productLocalStorage = JSON.parse (localStorage.getItem("panier"));
 console.log(productLocalStorage)
 //JSON.parse convertit les données JSON du localStorage en objet Javascript 
 //Lit ds le local storage, cette méthode renvoie la valeur de la clé correspondante "panier"
-
 
 
 //Fonction pour récupérer les autres caractéristiques du produit (nom, image, prix)
@@ -67,6 +71,7 @@ async function displayPanier (){
     
       updateQuantity ();
       deleteArticle();
+      totalPanier();
     }
   }
 }
@@ -74,7 +79,7 @@ displayPanier ()
 
 
 /*-----------------------------------------------------------------------------
-       Gérer la modification et la suppression de produit dans la page panier
+                  ***MODIFICATION ET SUPPRESSION DE PRODUIT***
 --------------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------------------
@@ -144,7 +149,7 @@ function deleteArticle(){  //Fonction à déclarer dans la fonction "displayPani
 }
 
 /*-----------------------------------------------------------------------------
-       Total Panier
+                              ***TOTAL PANIER***
 --------------------------------------------------------------------------------*/
 
 async function totalPanier() {
@@ -172,10 +177,10 @@ async function totalPanier() {
 
 }
 
-//déclaration de la fonction asynchrone 
-totalPanier();
 
-
+/*-----------------------------------------------------------------------------
+                              ***FORMULAIRE***
+--------------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------------------
       Formulaire
@@ -348,7 +353,7 @@ else{
       productID.push(productLocalStorage[a].id);
     }
 //on crée un objet à envoyer au serveur
-    let contactId = {  //avec le formulaire
+    let order = {  //avec le formulaire
       contact: {
         firstName:firstNameInput.value,
         lastName: lastNameInput.value,
@@ -358,13 +363,13 @@ else{
       },
       products: productID, // et le tableau des IDs à transmettre
     };
-console.log(contactId);
+console.log(order);
 
 
 //Fonction pour envoyer les données au serveur
     fetch('http://localhost:3000/api/products/order', {
         method: 'POST',
-        body: JSON.stringify(contactId),
+        body: JSON.stringify(order),
         headers: { 'Content-Type': 'application/json' },
       })
         .then((res) => res.json())
@@ -383,7 +388,3 @@ console.log(contactId);
     }
   } 
 });
-
-
-
-//version4
