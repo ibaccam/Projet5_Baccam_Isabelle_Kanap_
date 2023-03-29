@@ -7,11 +7,6 @@
 function getProductId() {
     return new URL(location.href).searchParams.get('id')  // utilisation de l'objet "URL" et de "searchParams"
 }
-// Déclaration d'une constante pour identifier l'ID du produit //on peut donner n'importe quel nom
-//const productId = getProductId() 
-
-
-
 
 
 /*-----------------------------------------------------------------------------
@@ -95,9 +90,8 @@ btn_ajouterPanier.addEventListener("click", (event)=>{
     const quantity = document.getElementById('quantity').value
     //valeur de la couleur choisie par l'utilisateur
     const color = document.getElementById('colors').value
-        //const productIdType = getProductIdData(productId)
-
-        //console.log(btn_ajouterPanier) 
+    
+    //console.log(btn_ajouterPanier) 
 
     // il faut vérifier que le choix de couleur et de quantité est valide
     if (color=="" || quantity<1 || quantity>100 || quantity==="") {
